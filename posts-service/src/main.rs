@@ -1,8 +1,8 @@
 use {
     actix_cors::Cors,
     actix_web::{web, App, HttpServer},
-    posts::{
-        index::{create_post, get_posts},
+    posts_service::{
+        routes::{create_post, get_posts, post_event},
         PostState,
     },
     std::sync::Mutex,
@@ -26,6 +26,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(posts.clone())
             .service(get_posts)
             .service(create_post)
+            .service(post_event)
     })
     .bind(("127.0.0.1", 4000))?;
 

@@ -1,5 +1,5 @@
 [package]
-name = "posts-service"
+name = "event-bus"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 actix-web = "4"
 actix-cors = "*"
-reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
-uuid = { version = "1.2.2", features = ["v4", "fast-rng", "macro-diagnostics"] }
+reqwest = { version = "0.11", features = ["json"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
