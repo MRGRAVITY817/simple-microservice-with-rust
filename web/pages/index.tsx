@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { CreatePost } from "../components/CreatePost";
+import { PostList } from "../components/PostList";
 
 export default function Home() {
   return (
@@ -14,6 +15,9 @@ export default function Home() {
         </h1>
         <div className="my-12 w-1/2">
           <CreatePost />
+        </div>
+        <div className="my-12">
+          <PostList />
         </div>
       </div>
     </div>

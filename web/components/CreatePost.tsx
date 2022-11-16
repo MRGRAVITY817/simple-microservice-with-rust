@@ -7,7 +7,7 @@ export const CreatePost = () => {
   const createPost = async (e: FormEvent) => {
     e.preventDefault();
     if (title.length > 0) {
-      const res = await fetch(POST_SERVICE_ENDPOINT, {
+      await fetch(POST_SERVICE_ENDPOINT, {
         method: "POST",
         body: JSON.stringify({ title }),
         headers: {
@@ -15,7 +15,7 @@ export const CreatePost = () => {
         },
       });
 
-      console.log(res);
+      setTitle("");
     }
   };
 
@@ -27,6 +27,7 @@ export const CreatePost = () => {
         type="text"
         className="rounded-md border-2 focus:outline-none border-gray-400 hover:border-gray-500 focus:border-gray-500 p-2"
         onChange={(e) => setTitle(e.target.value)}
+        value={title}
       />
       <button
         type="submit"

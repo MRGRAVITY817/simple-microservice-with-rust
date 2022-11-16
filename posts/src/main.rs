@@ -1,6 +1,5 @@
-use actix_cors::Cors;
-
 use {
+    actix_cors::Cors,
     actix_web::{web, App, HttpServer},
     posts::{
         index::{create_post, get_posts},
