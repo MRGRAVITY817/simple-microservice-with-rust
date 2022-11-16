@@ -10,7 +10,7 @@ pub struct CreatePostInput {
     title: String,
 }
 
-#[post("/")]
+#[post("/posts")]
 pub async fn create_post(
     input: web::Json<CreatePostInput>,
     post_state: web::Data<PostState>,

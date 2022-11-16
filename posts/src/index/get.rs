@@ -22,7 +22,7 @@ impl Responder for GetPostsOutput {
     }
 }
 
-#[get("/")]
+#[get("/posts")]
 pub async fn get_posts(post_state: web::Data<PostState>) -> GetPostsOutput {
     let posts = post_state.posts.lock().unwrap();
     GetPostsOutput {

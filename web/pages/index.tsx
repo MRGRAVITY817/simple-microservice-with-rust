@@ -1,4 +1,5 @@
-import Head from "next/head"
+import Head from "next/head";
+import { CreatePost } from "../components/CreatePost";
 
 export default function Home() {
   return (
@@ -7,8 +8,14 @@ export default function Home() {
         <title>My microservice blog</title>
       </Head>
       <div className="p-32">
-        <h1 className="text-4xl">Blog</h1>
+        <h1 className="text-6xl font-bold">
+          Blog, powered with{" "}
+          <span className="italic text-blue-700">microservice</span>
+        </h1>
+        <div className="my-12 w-1/2">
+          <CreatePost />
+        </div>
       </div>
     </div>
-  )
+  );
 }

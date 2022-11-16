@@ -1,3 +1,5 @@
+use actix_cors::Cors;
+
 use {
     actix_web::{web, App, HttpServer},
     posts::{
@@ -14,7 +16,14 @@ async fn main() -> std::io::Result<()> {
     });
 
     let app = HttpServer::new(move || {
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allowed_methods(vec!["GET", "POST"])
+            .allow_any_header()
+            .max_age(3600);
+
         App::new()
+            .wrap(cors)
             .app_data(posts.clone())
             .service(get_posts)
             .service(create_post)
