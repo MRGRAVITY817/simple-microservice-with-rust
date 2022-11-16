@@ -1,17 +1,12 @@
 use {
-    crate::{Comment, CommentsByPostState},
+    crate::{Comment, CommentsByPostState, PostInfo},
     actix_web::{get, http::header::ContentType, web, HttpResponse, Responder},
-    serde::{Deserialize, Serialize},
+    serde::Serialize,
 };
 
 #[derive(Serialize)]
 struct GetPostCommentsOutput {
     comments: Vec<Comment>,
-}
-
-#[derive(Deserialize)]
-struct PostInfo {
-    post_id: String,
 }
 
 #[get("/posts/{post_id}/comments")]
