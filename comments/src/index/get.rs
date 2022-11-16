@@ -15,7 +15,7 @@ pub async fn get_post_comments(
     comments_state: web::Data<CommentsByPostState>,
 ) -> impl Responder {
     let Some(comments) = comments_state.get_comments_by_post_id(&post_info.post_id) else {
-			return HttpResponse::NotFound().finish();
+			return HttpResponse::NoContent().finish();
 		};
 
     let body = serde_json::to_string(&comments).unwrap();

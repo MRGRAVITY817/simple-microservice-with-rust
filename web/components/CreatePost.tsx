@@ -22,10 +22,10 @@ export const CreatePost = () => {
   return (
     <form onSubmit={createPost} className="flex flex-col">
       <h2 className="text-3xl font-medium mb-8">Create new post</h2>
-      <label className="text-xl mb-2">Post Title</label>
       <input
         type="text"
-        className="rounded-md border-2 focus:outline-none border-gray-400 hover:border-gray-500 focus:border-gray-500 p-2"
+        placeholder="Enter post title..."
+        className="rounded-md border-2 focus:outline-none border-gray-300 hover:border-gray-500 focus:border-gray-500 p-2 text-xl"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
       />
