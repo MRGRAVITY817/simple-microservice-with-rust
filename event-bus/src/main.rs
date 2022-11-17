@@ -3,6 +3,13 @@ use {
     serde::{Deserialize, Serialize},
 };
 
+#[derive(Serialize, Deserialize, Clone, Copy)]
+pub enum CommentStatus {
+    Pending,
+    Approved,
+    Rejected,
+}
+
 #[derive(Serialize, Deserialize)]
 enum Event {
     PostCreated {
@@ -13,6 +20,18 @@ enum Event {
         comment_id: String,
         content: String,
         post_id: String,
+    },
+    CommentModerated {
+        comment_id: String,
+        content: String,
+        post_id: String,
+        status: CommentStatus,
+    },
+    CommentUpdated {
+        comment_id: String,
+        content: String,
+        post_id: String,
+        status: CommentStatus,
     },
 }
 
@@ -35,7 +54,17 @@ async fn broadcast_events(event: web::Json<Event>) -> impl Responder {
         .json(&event)
         .send();
 
-    let _ = tokio::join!(to_posts_service, to_comments_service, to_query_service);
+    let to_moderation_service = client
+        .post("http://localhost:4003/events")
+        .json(&event)
+        .send();
+
+    let _ = tokio::join!(
+        to_posts_service,
+        to_comments_service,
+        to_query_service,
+        to_moderation_service
+    );
 
     HttpResponse::Ok().finish()
 }
