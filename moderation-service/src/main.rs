@@ -15,6 +15,12 @@ enum Event {
         post_id: String,
         status: CommentStatus,
     },
+    CommentModerated {
+        comment_id: String,
+        content: String,
+        post_id: String,
+        status: CommentStatus,
+    },
     CommentUpdated {
         comment_id: String,
         content: String,
@@ -48,7 +54,7 @@ async fn moderate_comment(event: web::Json<Event>) -> impl Responder {
             let client = reqwest::Client::new();
             match client
                 .post("http://127.0.0.1:4005/events")
-                .json(&Event::CommentUpdated {
+                .json(&Event::CommentModerated {
                     comment_id: comment_id.to_owned(),
                     content: content.to_owned(),
                     post_id: post_id.to_owned(),

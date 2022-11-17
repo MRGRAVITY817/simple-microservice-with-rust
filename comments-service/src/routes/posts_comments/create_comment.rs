@@ -1,5 +1,5 @@
 use {
-    crate::{Comment, CommentsByPostState, Event, PostInfo},
+    crate::{Comment, CommentStatus, CommentsByPostState, Event, PostInfo},
     actix_web::{post, web, HttpResponse, Responder},
     serde::Deserialize,
     uuid::Uuid,
@@ -18,9 +18,11 @@ pub async fn create_new_post_comment(
 ) -> impl Responder {
     let comment_id = Uuid::new_v4().to_string();
     let content = input.content.clone();
+    let status = CommentStatus::Pending;
     let new_comment = Comment {
         id: comment_id.clone(),
         content: content.clone(),
+        status,
     };
 
     match comments_state.create_post_comment(&post_info.post_id, new_comment) {
@@ -32,6 +34,7 @@ pub async fn create_new_post_comment(
                     comment_id,
                     content,
                     post_id: post_info.post_id.clone(),
+                    status,
                 })
                 .send()
                 .await

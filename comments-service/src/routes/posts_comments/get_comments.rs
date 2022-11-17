@@ -14,7 +14,7 @@ pub async fn get_post_comments(
     post_info: web::Path<PostInfo>,
     comments_state: web::Data<CommentsByPostState>,
 ) -> impl Responder {
-    let Some(comments) = comments_state.get_comments_by_post_id(&post_info.post_id) else {
+    let Some(comments) = comments_state.get_comments(&post_info.post_id) else {
 			return HttpResponse::NoContent().finish();
 		};
 

@@ -10,6 +10,14 @@ use {
 pub struct Comment {
     id: String,
     content: String,
+    status: CommentStatus,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy)]
+pub enum CommentStatus {
+    Pending,
+    Approved,
+    Rejected,
 }
 
 pub type ServiceResult<T> = Result<T, ServiceError>;
@@ -27,7 +35,7 @@ impl CommentsByPostState {
         CommentsByPostState(Mutex::new(HashMap::new()))
     }
 
-    pub fn get_comments_by_post_id(&self, post_id: &str) -> Option<Vec<Comment>> {
+    pub fn get_comments(&self, post_id: &str) -> Option<Vec<Comment>> {
         let comments_map = self.0.lock().unwrap().clone();
 
         comments_map.get(post_id).cloned()
@@ -49,6 +57,30 @@ impl CommentsByPostState {
         }
         Ok(())
     }
+
+    pub fn update_comment(&self, post_id: &str, comment: Comment) -> ServiceResult<()> {
+        let mut comments_map = self
+            .0
+            .lock()
+            .map_err(|_| ServiceError::CannotAccessCommentsState.into())?;
+
+        if let Some(comments) = comments_map.get(post_id) {
+            let comments: Vec<Comment> = comments
+                .into_iter()
+                .map(|c| {
+                    if c.id == comment.id {
+                        comment.clone()
+                    } else {
+                        c.to_owned()
+                    }
+                })
+                .collect();
+
+            comments_map.insert(post_id.to_string(), comments);
+        }
+
+        Ok(())
+    }
 }
 
 #[derive(Deserialize)]
@@ -66,5 +98,18 @@ pub enum Event {
         comment_id: String,
         content: String,
         post_id: String,
+        status: CommentStatus,
+    },
+    CommentModerated {
+        comment_id: String,
+        content: String,
+        post_id: String,
+        status: CommentStatus,
+    },
+    CommentUpdated {
+        comment_id: String,
+        content: String,
+        post_id: String,
+        status: CommentStatus,
     },
 }
