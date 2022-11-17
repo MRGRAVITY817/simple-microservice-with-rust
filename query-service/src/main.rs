@@ -2,14 +2,15 @@ use {
     actix_cors::Cors,
     actix_web::{web, App, HttpServer},
     query_service::PostState,
-    std::sync::Mutex,
+    std::{collections::HashMap, sync::Mutex},
 };
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let post_state = web::Data::new(PostState {
-        posts: Mutex::new(vec![]),
+        posts: Mutex::new(HashMap::new()),
     });
+
     let app = HttpServer::new(move || {
         let cors = Cors::default()
             .allow_any_origin()

@@ -1,5 +1,7 @@
+pub mod routes;
+
 use serde::{Deserialize, Serialize};
-use std::sync::Mutex;
+use std::{collections::HashMap, sync::Mutex};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Post {
@@ -15,7 +17,7 @@ pub struct Comment {
 }
 
 pub struct PostState {
-    pub posts: Mutex<Vec<Post>>,
+    pub posts: Mutex<HashMap<String, Post>>,
 }
 
 #[derive(Serialize, Deserialize)]
