@@ -3,7 +3,7 @@ import { COMMENT_SERVICE_ENDPOINT } from "../utils/constants";
 import { CommentList } from "./CommentList";
 import { PostData } from "./PostList";
 
-export const Post: FC<PostData> = ({ id, title }) => {
+export const Post: FC<PostData> = ({ id, title, comments }) => {
   const [comment, setComment] = useState<string>("");
   const createComment = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ export const Post: FC<PostData> = ({ id, title }) => {
           Submit
         </button>
         <div className="mt-4">
-          <CommentList postId={id} />
+          <CommentList comments={comments} />
         </div>
       </form>
     </div>

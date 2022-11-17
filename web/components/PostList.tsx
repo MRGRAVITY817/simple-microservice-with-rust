@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
-import { POST_SERVICE_ENDPOINT } from "../utils/constants";
+import { QUERY_SERVICE_ENDPOINT } from "../utils/constants";
+import { CommentData } from "./CommentList";
 import { Post } from "./Post";
 
 export interface PostData {
   id: string;
   title: string;
+  comments: CommentData[];
 }
 
 export const PostList = () => {
   const [posts, setPosts] = useState<PostData[]>([]);
 
   const fetchPosts = async () => {
-    const res = await fetch(POST_SERVICE_ENDPOINT, { method: "GET" });
-    const data: { posts: PostData[] } = await res.json();
-
-    setPosts(data.posts);
+    const res = await fetch(QUERY_SERVICE_ENDPOINT, { method: "GET" });
+    const data: { [id: string]: PostData } = await res.json();
+    const posts = Object.values(data).map((post) => post);
+    setPosts(posts);
   };
 
   useEffect(() => {

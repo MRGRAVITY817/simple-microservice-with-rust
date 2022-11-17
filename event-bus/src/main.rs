@@ -30,7 +30,12 @@ async fn broadcast_events(event: web::Json<Event>) -> impl Responder {
         .json(&event)
         .send();
 
-    let _ = tokio::join!(to_posts_service, to_comments_service);
+    let to_query_service = client
+        .post("http://localhost:4002/events")
+        .json(&event)
+        .send();
+
+    let _ = tokio::join!(to_posts_service, to_comments_service, to_query_service);
 
     HttpResponse::Ok().finish()
 }

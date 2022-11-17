@@ -1,7 +1,10 @@
 use {
     actix_cors::Cors,
     actix_web::{web, App, HttpServer},
-    query_service::PostState,
+    query_service::{
+        routes::{get_posts, post_event},
+        PostState,
+    },
     std::{collections::HashMap, sync::Mutex},
 };
 
@@ -18,7 +21,11 @@ async fn main() -> std::io::Result<()> {
             .allow_any_header()
             .max_age(3600);
 
-        App::new().wrap(cors).app_data(post_state.clone())
+        App::new()
+            .wrap(cors)
+            .app_data(post_state.clone())
+            .service(post_event)
+            .service(get_posts)
     })
     .bind(("127.0.0.1", 4002))?;
 
