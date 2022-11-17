@@ -27,7 +27,7 @@ pub async fn create_post(
 
     let client = reqwest::Client::new();
     match client
-        .post("http://127.0.0.1:4005")
+        .post("http://127.0.0.1:4005/events")
         .json(&Event::PostCreated {
             post_id,
             title: input.title.clone(),

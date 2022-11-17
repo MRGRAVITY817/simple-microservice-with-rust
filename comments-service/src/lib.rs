@@ -1,15 +1,23 @@
-pub mod index;
+pub mod routes;
 
 use {
-    actix_web::HttpResponse,
     serde::{Deserialize, Serialize},
     std::{collections::HashMap, sync::Mutex},
+    thiserror::Error as ThisError,
 };
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Comment {
     id: String,
     content: String,
+}
+
+pub type ServiceResult<T> = Result<T, ServiceError>;
+
+#[derive(ThisError, Debug)]
+pub enum ServiceError {
+    #[error("Cannot access comments state")]
+    CannotAccessCommentsState,
 }
 
 pub struct CommentsByPostState(Mutex<HashMap<String, Vec<Comment>>>);
@@ -25,10 +33,11 @@ impl CommentsByPostState {
         comments_map.get(post_id).cloned()
     }
 
-    pub fn create_post_comment(&self, post_id: &str, comment: Comment) -> HttpResponse {
-        let Ok(mut comments_map) = self.0.lock() else {
-            return HttpResponse::InternalServerError().body("Cannot create comment.");
-        };
+    pub fn create_post_comment(&self, post_id: &str, comment: Comment) -> ServiceResult<()> {
+        let mut comments_map = self
+            .0
+            .lock()
+            .map_err(|_| ServiceError::CannotAccessCommentsState.into())?;
 
         match comments_map.get_mut(post_id) {
             Some(comments) => {
@@ -38,11 +47,24 @@ impl CommentsByPostState {
                 comments_map.insert(post_id.to_string(), vec![comment]);
             }
         }
-        HttpResponse::Ok().body("Created Comment!")
+        Ok(())
     }
 }
 
 #[derive(Deserialize)]
 pub struct PostInfo {
     post_id: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub enum Event {
+    PostCreated {
+        post_id: String,
+        title: String,
+    },
+    CommentCreated {
+        comment_id: String,
+        content: String,
+        post_id: String,
+    },
 }

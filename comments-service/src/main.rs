@@ -1,8 +1,8 @@
 use {
     actix_cors::Cors,
     actix_web::{web, App, HttpServer},
-    comments::{
-        index::{create_new_post_comment, get_post_comments},
+    comments_service::{
+        routes::{create_new_post_comment, get_post_comments, post_event},
         CommentsByPostState,
     },
 };
@@ -21,6 +21,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(cors)
             .app_data(comments_by_post.clone())
+            .service(post_event)
             .service(get_post_comments)
             .service(create_new_post_comment)
     })
