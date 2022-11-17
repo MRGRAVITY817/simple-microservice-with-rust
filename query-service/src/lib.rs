@@ -1,7 +1,9 @@
 pub mod routes;
 
-use serde::{Deserialize, Serialize};
-use std::{collections::HashMap, sync::Mutex};
+use {
+    serde::{Deserialize, Serialize},
+    std::{collections::HashMap, sync::Mutex},
+};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Post {
