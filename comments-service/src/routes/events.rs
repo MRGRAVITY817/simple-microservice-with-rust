@@ -38,6 +38,7 @@ pub async fn post_event(
                     .send()
                     .await
                 {
+                    println!("Comment moderated!");
                     return HttpResponse::Ok().finish();
                 }
             }

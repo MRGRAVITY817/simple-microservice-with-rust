@@ -3,14 +3,14 @@ use {
     serde::{Deserialize, Serialize},
 };
 
-#[derive(Serialize, Deserialize, Clone, Copy)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub enum CommentStatus {
     Pending,
     Approved,
     Rejected,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 enum Event {
     PostCreated {
         post_id: String,
@@ -20,6 +20,7 @@ enum Event {
         comment_id: String,
         content: String,
         post_id: String,
+        status: CommentStatus,
     },
     CommentModerated {
         comment_id: String,
@@ -37,6 +38,8 @@ enum Event {
 
 #[post("/events")]
 async fn broadcast_events(event: web::Json<Event>) -> impl Responder {
+    println!("Event received: {event:?}");
+
     let client = reqwest::Client::new();
 
     let to_posts_service = client
@@ -65,6 +68,8 @@ async fn broadcast_events(event: web::Json<Event>) -> impl Responder {
         to_query_service,
         to_moderation_service
     );
+
+    println!("Finished broadcasting event!");
 
     HttpResponse::Ok().finish()
 }

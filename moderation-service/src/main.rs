@@ -3,7 +3,7 @@ use {
     serde::{Deserialize, Serialize},
 };
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 enum Event {
     PostCreated {
         post_id: String,
@@ -29,7 +29,7 @@ enum Event {
     },
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 enum CommentStatus {
     Pending,
     Approved,
@@ -38,6 +38,7 @@ enum CommentStatus {
 
 #[post("/events")]
 async fn moderate_comment(event: web::Json<Event>) -> impl Responder {
+    println!("Received event: {event:?}");
     match *event {
         Event::CommentCreated {
             ref comment_id,
@@ -50,6 +51,8 @@ async fn moderate_comment(event: web::Json<Event>) -> impl Responder {
             } else {
                 CommentStatus::Approved
             };
+
+            println!("Moderated Comment!");
 
             let client = reqwest::Client::new();
             match client
