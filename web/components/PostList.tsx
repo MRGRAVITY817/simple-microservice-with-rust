@@ -15,7 +15,6 @@ export const PostList = () => {
   const fetchPosts = async () => {
     const res = await fetch(QUERY_SERVICE_ENDPOINT, { method: "GET" });
     const data: { [id: string]: PostData } = await res.json();
-    console.log(data);
     const posts = Object.values(data).map((post) => post);
     setPosts(posts);
   };

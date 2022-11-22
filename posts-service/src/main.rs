@@ -30,6 +30,6 @@ async fn main() -> std::io::Result<()> {
     })
     .bind(("127.0.0.1", 4000))?;
 
-    println!("Running app on http://127.0.0.1:4000");
+    println!("Running app on http://127.0.0.1:4000 ...");
     app.run().await
 }

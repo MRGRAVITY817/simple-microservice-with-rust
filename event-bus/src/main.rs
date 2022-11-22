@@ -38,8 +38,6 @@ enum Event {
 
 #[post("/events")]
 async fn broadcast_events(event: web::Json<Event>) -> impl Responder {
-    println!("Event received: {event:?}");
-
     let client = reqwest::Client::new();
 
     let to_posts_service = client
@@ -68,8 +66,6 @@ async fn broadcast_events(event: web::Json<Event>) -> impl Responder {
         to_query_service,
         to_moderation_service
     );
-
-    println!("Finished broadcasting event!");
 
     HttpResponse::Ok().finish()
 }
