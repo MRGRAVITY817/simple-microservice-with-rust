@@ -16,6 +16,14 @@ pub struct Post {
 pub struct Comment {
     id: String,
     content: String,
+    status: CommentStatus,
+}
+
+#[derive(Serialize, Deserialize, Clone, Copy)]
+pub enum CommentStatus {
+    Pending,
+    Approved,
+    Rejected,
 }
 
 pub struct PostState {
@@ -32,5 +40,18 @@ pub enum Event {
         comment_id: String,
         content: String,
         post_id: String,
+        status: CommentStatus,
+    },
+    CommentModerated {
+        comment_id: String,
+        content: String,
+        post_id: String,
+        status: CommentStatus,
+    },
+    CommentUpdated {
+        comment_id: String,
+        content: String,
+        post_id: String,
+        status: CommentStatus,
     },
 }
