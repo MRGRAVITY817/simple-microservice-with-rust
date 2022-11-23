@@ -1,5 +1,5 @@
 use {
-    actix_web::{post, web, App, HttpResponse, HttpServer, Responder},
+    actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder},
     serde::{Deserialize, Serialize},
     std::sync::Mutex,
 };
@@ -77,6 +77,14 @@ async fn broadcast_events(
     HttpResponse::Ok().finish()
 }
 
+#[get("/events")]
+async fn get_events(event_stack: web::Data<EventStack>) -> impl Responder {
+    let body = serde_json::to_string(&event_stack.0.lock().unwrap().clone()).unwrap();
+
+    HttpResponse::Ok().body(body)
+}
+
+#[derive(Serialize)]
 struct EventStack(Mutex<Vec<Event>>);
 
 #[tokio::main]
@@ -85,6 +93,7 @@ async fn main() -> std::io::Result<()> {
     let app = HttpServer::new(move || {
         App::new()
             .app_data(event_stack.clone())
+            .service(get_events)
             .service(broadcast_events)
     })
     .bind(("127.0.0.1", 4005))?;
