@@ -19,7 +19,7 @@ pub struct Comment {
     status: CommentStatus,
 }
 
-#[derive(Serialize, Deserialize, Clone, Copy)]
+#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub enum CommentStatus {
     Pending,
     Approved,
@@ -30,7 +30,7 @@ pub struct PostState {
     pub posts: Mutex<HashMap<String, Post>>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum Event {
     PostCreated {
         post_id: String,

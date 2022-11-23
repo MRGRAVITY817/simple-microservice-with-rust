@@ -2,17 +2,15 @@ use {
     actix_cors::Cors,
     actix_web::{web, App, HttpServer},
     query_service::{
-        routes::{get_posts, post_event},
-        PostState,
+        routes::{get_posts, post_event, process_event},
+        Event, Post, PostState,
     },
     std::{collections::HashMap, sync::Mutex},
 };
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let post_state = web::Data::new(PostState {
-        posts: Mutex::new(HashMap::new()),
-    });
+    let post_state = sync_state().await;
 
     let app = HttpServer::new(move || {
         let cors = Cors::default()
@@ -31,4 +29,27 @@ async fn main() -> std::io::Result<()> {
 
     println!("Running app on http://127.0.0.1:4002 ...");
     app.run().await
+}
+
+async fn sync_state() -> web::Data<PostState> {
+    let events = reqwest::get("http://127.0.0.1:4005/events")
+        .await
+        .unwrap()
+        .json::<Vec<Event>>()
+        .await
+        .unwrap();
+
+    println!("events {events:?}");
+
+    let mut posts: HashMap<String, Post> = HashMap::new();
+
+    events
+        .iter()
+        .for_each(|event| process_event(&mut posts, event));
+
+    let post_state = web::Data::new(PostState {
+        posts: Mutex::new(posts),
+    });
+
+    post_state
 }

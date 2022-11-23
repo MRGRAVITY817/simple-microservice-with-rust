@@ -45,6 +45,8 @@ async fn broadcast_events(
     let mut event_stack = event_stack.0.lock().unwrap();
     event_stack.push(event.clone());
 
+    println!("Stack upgraded: {event_stack:?}");
+
     let client = reqwest::Client::new();
 
     let to_posts_service = client
@@ -79,7 +81,10 @@ async fn broadcast_events(
 
 #[get("/events")]
 async fn get_events(event_stack: web::Data<EventStack>) -> impl Responder {
-    let body = serde_json::to_string(&event_stack.0.lock().unwrap().clone()).unwrap();
+    let events = event_stack.0.lock().unwrap();
+    let body = serde_json::to_string(&events.to_vec()).unwrap();
+
+    println!("Sending events ... {body}");
 
     HttpResponse::Ok().body(body)
 }

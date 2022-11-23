@@ -1,6 +1,7 @@
 use {
     crate::{Comment, Event, Post, PostState},
     actix_web::{post, web, HttpResponse, Responder},
+    std::collections::HashMap,
 };
 
 #[post("/events")]
@@ -10,6 +11,12 @@ pub async fn post_event(
 ) -> impl Responder {
     let mut posts = post_state.posts.lock().unwrap();
 
+    process_event(&mut posts, &event);
+
+    HttpResponse::Ok().finish()
+}
+
+pub fn process_event(posts: &mut HashMap<String, Post>, event: &Event) {
     match *event {
         Event::PostCreated {
             ref post_id,
@@ -31,7 +38,7 @@ pub async fn post_event(
             ref status,
         } => {
             let Some(post) = posts.get_mut(post_id) else {
-                return HttpResponse::NotFound().body("Cannot create comment. Post not found.");
+                return 
             };
             post.comments.push(Comment {
                 id: comment_id.to_owned(),
@@ -46,7 +53,7 @@ pub async fn post_event(
             ref status,
         } => {
             let Some(post) = posts.get_mut(post_id) else {
-                return HttpResponse::NotFound().body("Cannot create comment. Post not found.");
+                return 
             };
             post.comments.iter_mut().for_each(|comment| {
                 if comment.id == *comment_id {
@@ -57,6 +64,4 @@ pub async fn post_event(
         }
         _ => {}
     }
-
-    HttpResponse::Ok().finish()
 }
