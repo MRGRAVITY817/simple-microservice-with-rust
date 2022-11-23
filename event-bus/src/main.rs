@@ -1,6 +1,7 @@
 use {
     actix_web::{post, web, App, HttpResponse, HttpServer, Responder},
     serde::{Deserialize, Serialize},
+    std::sync::Mutex,
 };
 
 #[derive(Serialize, Deserialize, Clone, Copy, Debug)]
@@ -10,7 +11,7 @@ pub enum CommentStatus {
     Rejected,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 enum Event {
     PostCreated {
         post_id: String,
@@ -37,7 +38,13 @@ enum Event {
 }
 
 #[post("/events")]
-async fn broadcast_events(event: web::Json<Event>) -> impl Responder {
+async fn broadcast_events(
+    event: web::Json<Event>,
+    event_stack: web::Data<EventStack>,
+) -> impl Responder {
+    let mut event_stack = event_stack.0.lock().unwrap();
+    event_stack.push(event.clone());
+
     let client = reqwest::Client::new();
 
     let to_posts_service = client
@@ -70,9 +77,17 @@ async fn broadcast_events(event: web::Json<Event>) -> impl Responder {
     HttpResponse::Ok().finish()
 }
 
+struct EventStack(Mutex<Vec<Event>>);
+
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
-    let app = HttpServer::new(|| App::new().service(broadcast_events)).bind(("127.0.0.1", 4005))?;
+    let event_stack = web::Data::new(EventStack(Mutex::new(vec![])));
+    let app = HttpServer::new(move || {
+        App::new()
+            .app_data(event_stack.clone())
+            .service(broadcast_events)
+    })
+    .bind(("127.0.0.1", 4005))?;
     println!("Event bus running on http://127.0.0.1:4005 ...");
     app.run().await
 }
