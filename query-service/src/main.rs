@@ -33,24 +33,21 @@ async fn main() -> std::io::Result<()> {
 }
 
 async fn sync_state() -> web::Data<PostState> {
-    let events = reqwest::get("http://127.0.0.1:4005/events")
-        .await
-        .unwrap()
-        .json::<Vec<Event>>()
-        .await
-        .unwrap();
+    if let Ok(response) = reqwest::get("http://127.0.0.1:4005/events").await {
+        if let Ok(events) = response.json::<Vec<Event>>().await {
+            let mut posts: HashMap<String, Post> = HashMap::new();
+            events
+                .iter()
+                .for_each(|event| process_event(&mut posts, event));
+            let post_state = web::Data::new(PostState {
+                posts: Mutex::new(posts),
+            });
 
-    println!("events {events:?}");
+            return post_state;
+        }
+    }
 
-    let mut posts: HashMap<String, Post> = HashMap::new();
-
-    events
-        .iter()
-        .for_each(|event| process_event(&mut posts, event));
-
-    let post_state = web::Data::new(PostState {
-        posts: Mutex::new(posts),
-    });
-
-    post_state
+    web::Data::new(PostState {
+        posts: Mutex::new(HashMap::new()),
+    })
 }
