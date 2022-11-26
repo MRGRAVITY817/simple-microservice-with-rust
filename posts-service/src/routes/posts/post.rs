@@ -1,6 +1,7 @@
 use {
-    crate::{Event, Post, PostState},
+    crate::{Post, PostState},
     actix_web::{post, web, HttpResponse, Responder},
+    common::Event,
     serde::Deserialize,
     uuid::Uuid,
 };
