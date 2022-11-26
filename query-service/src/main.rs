@@ -1,9 +1,10 @@
 use {
     actix_cors::Cors,
     actix_web::{web, App, HttpServer},
+    common::Event,
     query_service::{
         routes::{get_posts, post_event, process_event},
-        Event, Post, PostState,
+        Post, PostState,
     },
     std::{collections::HashMap, sync::Mutex},
 };

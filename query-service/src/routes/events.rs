@@ -1,6 +1,7 @@
 use {
-    crate::{Comment, Event, Post, PostState},
+    crate::{Post, PostState},
     actix_web::{post, web, HttpResponse, Responder},
+    common::{Event, Comment},
     std::collections::HashMap,
 };
 

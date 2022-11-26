@@ -1,6 +1,7 @@
 pub mod routes;
 
 use {
+    common::Comment,
     serde::{Deserialize, Serialize},
     std::{collections::HashMap, sync::Mutex},
 };
@@ -12,46 +13,6 @@ pub struct Post {
     comments: Vec<Comment>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
-pub struct Comment {
-    id: String,
-    content: String,
-    status: CommentStatus,
-}
-
-#[derive(Serialize, Deserialize, Clone, Copy, Debug)]
-pub enum CommentStatus {
-    Pending,
-    Approved,
-    Rejected,
-}
-
 pub struct PostState {
     pub posts: Mutex<HashMap<String, Post>>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub enum Event {
-    PostCreated {
-        post_id: String,
-        title: String,
-    },
-    CommentCreated {
-        comment_id: String,
-        content: String,
-        post_id: String,
-        status: CommentStatus,
-    },
-    CommentModerated {
-        comment_id: String,
-        content: String,
-        post_id: String,
-        status: CommentStatus,
-    },
-    CommentUpdated {
-        comment_id: String,
-        content: String,
-        post_id: String,
-        status: CommentStatus,
-    },
 }
