@@ -1,18 +1,11 @@
 pub mod routes;
 
 use {
-    common::CommentStatus,
-    serde::{Deserialize, Serialize},
+    common::Comment,
+    serde::Deserialize,
     std::{collections::HashMap, sync::Mutex},
     thiserror::Error as ThisError,
 };
-
-#[derive(Serialize, Deserialize, Clone)]
-pub struct Comment {
-    id: String,
-    content: String,
-    status: CommentStatus,
-}
 
 pub type ServiceResult<T> = Result<T, ServiceError>;
 

@@ -1,5 +1,12 @@
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize, Clone)]
+pub struct Comment {
+    pub id: String,
+    pub content: String,
+    pub status: CommentStatus,
+}
+
 #[derive(Serialize, Deserialize, Clone, Copy, Debug)]
 pub enum CommentStatus {
     Pending,

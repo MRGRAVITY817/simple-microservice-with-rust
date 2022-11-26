@@ -1,6 +1,7 @@
 use {
-    crate::{Comment, CommentsByPostState, PostInfo},
+    crate::{CommentsByPostState, PostInfo},
     actix_web::{get, http::header::ContentType, web, HttpResponse, Responder},
+    common::Comment,
     serde::Serialize,
 };
 

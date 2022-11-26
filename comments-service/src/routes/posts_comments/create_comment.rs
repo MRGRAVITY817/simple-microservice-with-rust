@@ -1,7 +1,7 @@
 use {
-    crate::{Comment, CommentsByPostState, PostInfo},
+    crate::{CommentsByPostState, PostInfo},
     actix_web::{post, web, HttpResponse, Responder},
-    common::{CommentStatus, Event},
+    common::{Comment, CommentStatus, Event},
     serde::Deserialize,
     uuid::Uuid,
 };
