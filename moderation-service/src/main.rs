@@ -1,40 +1,7 @@
 use {
     actix_web::{post, web, App, HttpResponse, HttpServer, Responder},
-    serde::{Deserialize, Serialize},
+    common::{CommentStatus, Event},
 };
-
-#[derive(Serialize, Deserialize, Debug)]
-enum Event {
-    PostCreated {
-        post_id: String,
-        title: String,
-    },
-    CommentCreated {
-        comment_id: String,
-        content: String,
-        post_id: String,
-        status: CommentStatus,
-    },
-    CommentModerated {
-        comment_id: String,
-        content: String,
-        post_id: String,
-        status: CommentStatus,
-    },
-    CommentUpdated {
-        comment_id: String,
-        content: String,
-        post_id: String,
-        status: CommentStatus,
-    },
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-enum CommentStatus {
-    Pending,
-    Approved,
-    Rejected,
-}
 
 #[post("/events")]
 async fn moderate_comment(event: web::Json<Event>) -> impl Responder {
