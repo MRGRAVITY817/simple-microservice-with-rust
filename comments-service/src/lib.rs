@@ -1,6 +1,7 @@
 pub mod routes;
 
 use {
+    common::CommentStatus,
     serde::{Deserialize, Serialize},
     std::{collections::HashMap, sync::Mutex},
     thiserror::Error as ThisError,
@@ -11,13 +12,6 @@ pub struct Comment {
     id: String,
     content: String,
     status: CommentStatus,
-}
-
-#[derive(Serialize, Deserialize, Clone, Copy)]
-pub enum CommentStatus {
-    Pending,
-    Approved,
-    Rejected,
 }
 
 pub type ServiceResult<T> = Result<T, ServiceError>;
@@ -86,30 +80,4 @@ impl CommentsByPostState {
 #[derive(Deserialize)]
 pub struct PostInfo {
     post_id: String,
-}
-
-#[derive(Serialize, Deserialize)]
-pub enum Event {
-    PostCreated {
-        post_id: String,
-        title: String,
-    },
-    CommentCreated {
-        comment_id: String,
-        content: String,
-        post_id: String,
-        status: CommentStatus,
-    },
-    CommentModerated {
-        comment_id: String,
-        content: String,
-        post_id: String,
-        status: CommentStatus,
-    },
-    CommentUpdated {
-        comment_id: String,
-        content: String,
-        post_id: String,
-        status: CommentStatus,
-    },
 }

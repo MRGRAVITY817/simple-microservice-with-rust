@@ -1,6 +1,7 @@
 use {
-    crate::{Comment, CommentsByPostState, Event},
+    crate::{Comment, CommentsByPostState},
     actix_web::{post, web, HttpResponse, Responder},
+    common::Event,
 };
 
 #[post("/events")]
