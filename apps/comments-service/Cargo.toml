@@ -1,0 +1,16 @@
+[package]
+name = "comments-service"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "4"
+actix-cors = "*"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1" }
+reqwest = { version = "0.11", features = ["json"] }
+uuid = { version = "1.2.2", features = ["v4", "fast-rng", "macro-diagnostics"] }
+thiserror = "1"
+common = { path = "../../packages/common" }

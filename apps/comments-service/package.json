@@ -1,0 +1,11 @@
+{
+  "name": "comment-service",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "cargo build",
+    "dev": "cargo watch -x run",
+    "test": "cargo test",
+    "lint": "cargo clippy"
+  }
+}
